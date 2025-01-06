@@ -1,5 +1,5 @@
-import * as easPassportModule from "../src/utils/easPassportSchema";
-import * as easStampModule from "../src/utils/easStampSchema";
+import * as easPassportModule from "../src/utils/easPassportSchema.js";
+import * as easStampModule from "../src/utils/easStampSchema.js";
 import onchainInfo from "../../deployments/onchainInfo.json";
 
 import { VerifiableCredential } from "@gitcoin/passport-types";

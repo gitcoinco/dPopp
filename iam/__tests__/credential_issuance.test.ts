@@ -1,7 +1,7 @@
 import axios from "axios";
-import { checkCredentialBans } from "../src/utils/bans";
+import { checkCredentialBans } from "../src/utils/bans.js";
 import { ErrorResponseBody } from "@gitcoin/passport-types";
-import { ApiError } from "../src/utils/helpers";
+import { ApiError } from "../src/utils/helpers.js";
 
 jest.mock("axios");
 const mockedAxios = axios as jest.Mocked<typeof axios>;

@@ -18,3 +18,6 @@ process.env.SCROLL_BADGE_PROVIDER_INFO =
   '{"DeveloperList#PassportCommiterLevel1#6a51c84c":{"contractAddress":"0x71A848A38fFCcA5c7A431F2BB411Ab632Fa0c456","level":1}}';
 process.env.SCROLL_BADGE_ATTESTATION_SCHEMA_UID =
   "0xa35b5470ebb301aa5d309a8ee6ea258cad680ea112c86e456d5f2254448afc74";
+process.env.MISHTI_CLIENT_PRIVATE_KEY =
+  "0x04d16281ff3bf268b29cdd684183f72542757d24ae9fdfb863e7c755e599163a";
+process.env.MISHTI_RELAY_URL = "http://127.0.0.1:8081";

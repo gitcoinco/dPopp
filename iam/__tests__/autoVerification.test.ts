@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { isAddress } from "ethers";
 import axios from "axios";
-import { autoVerificationHandler } from "../src/utils/autoVerification";
+import { autoVerificationHandler } from "../src/utils/autoVerification.js";
 import { ApiError } from "../src/utils/helpers.js";
 import { checkConditionsAndIssueCredentials } from "../src/utils/credentials.js";
 import { VerifiableCredential } from "@gitcoin/passport-types";

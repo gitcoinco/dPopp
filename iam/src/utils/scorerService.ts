@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Score } from "./easStampSchema";
+import { Score } from "./easStampSchema.js";
 import { handleAxiosError } from "@gitcoin/passport-platforms";
 
 export class IAMError extends Error {

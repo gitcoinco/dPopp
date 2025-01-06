@@ -1,4 +1,4 @@
-import * as easStampModule from "../src/utils/easStampSchema";
+import * as easStampModule from "../src/utils/easStampSchema.js";
 import { VerifiableCredential } from "@gitcoin/passport-types";
 import { NO_EXPIRATION, ZERO_BYTES32 } from "@ethereum-attestation-service/eas-sdk";
 import { SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";

@@ -1,5 +1,5 @@
 import { RequestPayload } from "@gitcoin/passport-types";
-import { getChallenge } from "../src/utils/challenge";
+import { getChallenge } from "../src/utils/challenge.js";
 
 describe("getChallenge", () => {
   it("returns a challenge for SignerChallenge", () => {

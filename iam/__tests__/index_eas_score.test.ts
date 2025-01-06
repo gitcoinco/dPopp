@@ -3,15 +3,15 @@ import request from "supertest";
 import { PassportCache } from "@gitcoin/passport-platforms";
 
 // ---- Test subject
-import { app } from "../src/index";
+import { app } from "../src/index.js";
 
 import { MultiAttestationRequest, ZERO_BYTES32, NO_EXPIRATION } from "@ethereum-attestation-service/eas-sdk";
 
 import * as identityMock from "@gitcoin/passport-identity";
-import * as easSchemaMock from "../src/utils/easStampSchema";
-import * as easPassportSchemaMock from "../src/utils/easPassportSchema";
-import { IAMError } from "../src/utils/scorerService";
-import { serializeJson, toJsonObject } from "../src/utils/json";
+import * as easSchemaMock from "../src/utils/easStampSchema.js";
+import * as easPassportSchemaMock from "../src/utils/easPassportSchema.js";
+import { IAMError } from "../src/utils/scorerService.js";
+import { serializeJson, toJsonObject } from "../src/utils/json.js";
 
 jest.mock("@gitcoin/passport-identity", () => ({
   ...jest.requireActual("@gitcoin/passport-identity"),

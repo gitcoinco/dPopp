@@ -4,8 +4,8 @@ import * as DIDKit from "@spruceid/didkit-wasm-node";
 import { PassportCache, providers } from "@gitcoin/passport-platforms";
 
 // ---- Test subject
-import { app } from "../src/index";
-import { getAttestationDomainSeparator } from "../src/utils/attestations";
+import { app } from "../src/index.js";
+import { getAttestationDomainSeparator } from "../src/utils/attestations.js";
 
 // ---- Types
 import {
@@ -21,16 +21,27 @@ import {
 import { MultiAttestationRequest, ZERO_BYTES32, NO_EXPIRATION } from "@ethereum-attestation-service/eas-sdk";
 
 import { parseEther } from "ethers";
-import * as easFeesMock from "../src/utils/easFees";
+import * as easFeesMock from "../src/utils/easFees.js";
 import * as identityMock from "@gitcoin/passport-identity";
-import * as easSchemaMock from "../src/utils/easStampSchema";
-import * as easPassportSchemaMock from "../src/utils/easPassportSchema";
-import { IAMError } from "../src/utils/scorerService";
-import { VerifyDidChallengeBaseError, verifyDidChallenge } from "../src/utils/verifyDidChallenge";
-import { getEip712Issuer } from "../src/issuers";
-import { toJsonObject } from "../src/utils/json";
+import * as easSchemaMock from "../src/utils/easStampSchema.js";
+import * as easPassportSchemaMock from "../src/utils/easPassportSchema.js";
+import { IAMError } from "../src/utils/scorerService.js";
+import { VerifyDidChallengeBaseError, verifyDidChallenge } from "../src/utils/verifyDidChallenge.js";
+import { getEip712Issuer } from "../src/issuers.js";
+import { toJsonObject } from "../src/utils/json.js";
 
 const issuer = getEip712Issuer();
+
+jest.mock("../src/utils/oprf", () => ({
+  recordToNullifier: async ({ record }: any) => {
+    const crypto = await import("crypto");
+    const hash = crypto.createHash("sha256");
+
+    hash.update(JSON.stringify(record));
+
+    return hash.digest("hex");
+  },
+}));
 
 jest.mock("../src/utils/bans", () => ({
   checkCredentialBans: jest.fn().mockImplementation((input) => Promise.resolve(input)),
@@ -831,12 +842,17 @@ describe("POST /verify", function () {
     jest.spyOn(identityMock, "verifyCredential").mockResolvedValue(true);
 
     // create a req against the express app
-    await request(app)
+    const response = await request(app)
       .post("/api/v0.0.0/verify")
       .send({ challenge, payload })
       .set("Accept", "application/json")
       .expect(200)
       .expect("Content-Type", /json/);
+
+    response.body.forEach((item: any) => {
+      expect(item).toHaveProperty("record");
+      expect(item.record).toMatchObject({ type: "Simple" });
+    });
   });
   it("should not issue credential for additional signer when invalid address is provided", async () => {
     (identityMock.verifyCredential as jest.Mock).mockResolvedValueOnce(true);

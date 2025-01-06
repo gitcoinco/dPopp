@@ -1,4 +1,4 @@
-import { getEASFeeAmount } from "../src/utils/easFees";
+import { getEASFeeAmount } from "../src/utils/easFees.js";
 import { parseEther } from "ethers";
 import Moralis from "moralis";
 import { PassportCache } from "@gitcoin/passport-platforms";

@@ -2,10 +2,21 @@
 import request from "supertest";
 
 // ---- Test subject
-import { app } from "../src/index";
-import { getEip712Issuer } from "../src/issuers";
+import { app } from "../src/index.js";
+import { getEip712Issuer } from "../src/issuers.js";
 
 const issuer = getEip712Issuer();
+
+jest.mock("../src/utils/oprf", () => ({
+  recordToNullifier: async ({ record }: any) => {
+    const crypto = await import("crypto");
+    const hash = crypto.createHash("sha256");
+
+    hash.update(JSON.stringify(record));
+
+    return hash.digest("hex");
+  },
+}));
 
 jest.mock("../src/utils/bans", () => ({
   checkCredentialBans: jest.fn().mockImplementation((input) => Promise.resolve(input)),

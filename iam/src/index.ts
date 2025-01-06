@@ -50,58 +50,25 @@ import { filterRevokedCredentials } from "./utils/revocations.js";
 
 // ---- Config - check for all required env variables
 // We want to prevent the app from starting with default values or if it is misconfigured
-const configErrors = [];
+const missingEnvVars = [
+  "IAM_JWK",
+  "ATTESTATION_SIGNER_PRIVATE_KEY",
+  "TESTNET_ATTESTATION_SIGNER_PRIVATE_KEY",
+  "ALLO_SCORER_ID",
+  "SCORER_ENDPOINT",
+  "SCORER_API_KEY",
+  "EAS_GITCOIN_STAMP_SCHEMA",
+  "MORALIS_API_KEY",
+  "IAM_JWK_EIP712",
+  "EAS_FEE_USD",
+  "SCROLL_BADGE_PROVIDER_INFO",
+  "SCROLL_BADGE_ATTESTATION_SCHEMA_UID",
+  "MISHTI_CLIENT_PRIVATE_KEY",
+  "MISHTI_RELAY_URL",
+].filter((env) => !process.env[env]);
 
-if (!process.env.IAM_JWK) {
-  configErrors.push("IAM_JWK is required");
-}
-
-if (!process.env.ATTESTATION_SIGNER_PRIVATE_KEY) {
-  configErrors.push("ATTESTATION_SIGNER_PRIVATE_KEY is required");
-}
-
-if (!process.env.TESTNET_ATTESTATION_SIGNER_PRIVATE_KEY) {
-  configErrors.push("TESTNET_ATTESTATION_SIGNER_PRIVATE_KEY is required");
-}
-
-if (!process.env.ALLO_SCORER_ID) {
-  configErrors.push("ALLO_SCORER_ID is required");
-}
-
-if (!process.env.SCORER_ENDPOINT) {
-  configErrors.push("SCORER_ENDPOINT is required");
-}
-
-if (!process.env.SCORER_API_KEY) {
-  configErrors.push("SCORER_API_KEY is required");
-}
-
-if (!process.env.EAS_GITCOIN_STAMP_SCHEMA) {
-  configErrors.push("EAS_GITCOIN_STAMP_SCHEMA is required");
-}
-
-if (!process.env.MORALIS_API_KEY) {
-  configErrors.push("MORALIS_API_KEY is required");
-}
-
-if (!process.env.IAM_JWK_EIP712) {
-  configErrors.push("IAM_JWK_EIP712 is required");
-}
-
-if (!process.env.EAS_FEE_USD) {
-  configErrors.push("EAS_FEE_USD is required");
-}
-
-if (!process.env.SCROLL_BADGE_PROVIDER_INFO) {
-  configErrors.push("SCROLL_BADGE_PROVIDER_INFO is required");
-}
-
-if (!process.env.SCROLL_BADGE_ATTESTATION_SCHEMA_UID) {
-  configErrors.push("SCROLL_BADGE_ATTESTATION_SCHEMA_UID is required");
-}
-
-if (configErrors.length > 0) {
-  configErrors.forEach((error) => console.error(error)); // eslint-disable-line no-console
+if (missingEnvVars.length > 0) {
+  missingEnvVars.forEach((envVar) => console.error(`${envVar} is required`));
   throw new Error("Missing required configuration");
 }
 
@@ -254,6 +221,7 @@ app.post("/api/v0.0.0/verify", (req: Request, res: Response): void => {
       return void errorRes(res, "Unable to verify payload", 401);
     })
     .catch((error) => {
+      console.log("ERROR", error);
       if (error instanceof ApiError) {
         return void errorRes(res, error.message, error.code);
       }

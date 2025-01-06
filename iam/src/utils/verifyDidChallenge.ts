@@ -4,9 +4,8 @@ import { Cacao } from "ceramic-cacao";
 import { CID } from "multiformats/cid";
 import { SignedDidChallenge } from "@gitcoin/passport-types";
 import * as dagCBOR from "@ipld/dag-cbor";
-import { encode } from "multiformats/block";
+import { encode, Block } from "multiformats/block";
 import { sha256 } from "multiformats/hashes/sha2";
-import { MAX_VALID_DID_SESSION_AGE } from "@gitcoin/passport-identity";
 
 export class VerifyDidChallengeBaseError extends Error {}
 
@@ -36,7 +35,11 @@ const verifyMatchesExpectedChallenge = async (
   expectedChallenge: string
 ): Promise<void> => {
   try {
-    const expectedBlock = await encode({ value: expectedChallenge, codec: dagCBOR, hasher: sha256 });
+    const expectedBlock: Block = await encode({
+      value: expectedChallenge,
+      codec: dagCBOR,
+      hasher: sha256,
+    });
 
     const signedCID = CID.decode(new Uint8Array(signedChallenge.cid));
 

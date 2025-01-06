@@ -32,7 +32,7 @@ import {
   challengeSignatureDocument,
   DocumentType,
   stampCredentialDocument,
-} from "./signingDocuments";
+} from "./signingDocuments.js";
 
 // Control expiry times of issued credentials
 export const CHALLENGE_EXPIRES_AFTER_SECONDS = 60; // 1min
@@ -200,6 +200,30 @@ export const issueChallengeCredential = async (
   } as IssuedCredential;
 };
 
+const getNullifier = async ({
+  key,
+  record,
+  oprf,
+}: {
+  key: string;
+  record: ProofRecord;
+  oprf?: () => Promise<string>;
+}) => {
+  if (oprf) {
+    return oprf();
+  } else {
+    // Generate a hash like SHA256(IAM_PRIVATE_KEY+PII), where PII is the (deterministic) JSON representation
+    // of the PII object after transforming it to an array of the form [[key:string, value:string], ...]
+    // with the elements sorted by key
+    return base64.encode(
+      createHash("sha256")
+        .update(key, "utf-8")
+        .update(JSON.stringify(objToSortedArray(record)))
+        .digest()
+    );
+  }
+};
+
 // Return a verifiable credential with embedded hash
 export const issueHashedCredential = async (
   DIDKit: DIDKitLib,
@@ -207,17 +231,10 @@ export const issueHashedCredential = async (
   address: string,
   record: ProofRecord,
   expiresInSeconds: number = CREDENTIAL_EXPIRES_AFTER_SECONDS,
-  signatureType?: string
+  signatureType?: string,
+  oprf?: () => Promise<string>
 ): Promise<IssuedCredential> => {
-  // Generate a hash like SHA256(IAM_PRIVATE_KEY+PII), where PII is the (deterministic) JSON representation
-  // of the PII object after transforming it to an array of the form [[key:string, value:string], ...]
-  // with the elements sorted by key
-  const hash = base64.encode(
-    createHash("sha256")
-      .update(key, "utf-8")
-      .update(JSON.stringify(objToSortedArray(record)))
-      .digest()
-  );
+  const hash = await getNullifier({ key, record, oprf });
 
   let credential: VerifiableCredential;
   if (signatureType === "EIP712") {

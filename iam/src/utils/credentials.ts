@@ -8,6 +8,7 @@ import {
   ProviderContext,
   VerifiedPayload,
   VerifiableCredential,
+  ProofRecord,
 } from "@gitcoin/passport-types";
 
 import { getIssuerKey } from "../issuers.js";
@@ -20,6 +21,7 @@ import { issueHashedCredential, verifyCredential } from "@gitcoin/passport-ident
 import { providers, platforms } from "@gitcoin/passport-platforms";
 import { ApiError } from "./helpers.js";
 import { checkCredentialBans } from "./bans.js";
+import { recordToNullifier } from "./oprf.js";
 
 const providerTypePlatformMap = Object.entries(platforms).reduce(
   (acc, [platformName, { providers }]) => {
@@ -66,7 +68,8 @@ const issueCredentials = async (
     results.map(async ({ verifyResult, code: verifyCode, error: verifyError, type }) => {
       let code = verifyCode;
       let error = verifyError;
-      let record, credential;
+      let record: ProofRecord | undefined;
+      let credential;
 
       try {
         // check if the request is valid against the selected Identity Provider
@@ -89,10 +92,12 @@ const issueCredentials = async (
             address,
             record,
             verifyResult.expiresInSeconds,
-            payload.signatureType
+            payload.signatureType,
+            () => recordToNullifier({ record })
           ));
         }
-      } catch {
+      } catch (e) {
+        console.error(e);
         error = "Unable to produce a verifiable credential";
         code = 500;
       }

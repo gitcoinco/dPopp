@@ -1,7 +1,7 @@
-import { fetchPassportScore } from "../src/utils/scorerService";
+import { fetchPassportScore } from "../src/utils/scorerService.js";
 
 // Import the entire module to help with typing
-import * as scorerService from "../src/utils/scorerService";
+import * as scorerService from "../src/utils/scorerService.js";
 
 // Type for the mocked function (adjust as needed based on the actual implementation)
 type MockedFunction = jest.MockedFunction<typeof scorerService.fetchPassportScore>;
