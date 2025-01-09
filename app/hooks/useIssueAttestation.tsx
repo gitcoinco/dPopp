@@ -171,7 +171,9 @@ export const useIssueAttestation = ({ chain }: { chain?: Chain }) => {
             errorMessage = "Transaction rejected by user";
           } else if (
             errorMessage.includes("insufficient funds") ||
-            e?.info?.error?.data?.message?.includes("insufficient funds")
+            e?.info?.error?.data?.message?.includes("insufficient funds") ||
+            errorMessage.includes("cost exceeds account balance") ||
+            e?.info?.error?.data?.message?.includes("cost exceeds account balance")
           ) {
             errorMessage =
               "You don't have sufficient funds to bring your data onchain. Consider funding your wallet first.";
