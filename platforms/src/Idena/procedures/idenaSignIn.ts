@@ -2,7 +2,7 @@ import crypto from "crypto";
 import axios, { AxiosInstance, AxiosResponse } from "axios";
 import { initCacheSession, loadCacheSession, clearCacheSession, PlatformSession } from "../../utils/platform-cache";
 import { ProviderContext } from "@gitcoin/passport-types";
-import { ProviderInternalVerificationError } from "../../types";
+import { ProviderExternalVerificationError, ProviderInternalVerificationError } from "../../types";
 import { handleProviderAxiosError } from "../../utils/handleProviderAxiosError";
 
 type IdenaCache = {
@@ -116,6 +116,13 @@ export const requestIdentityState = async (
   context: IdenaContext
 ): Promise<{ address: string; state: string; expirationDate: string }> => {
   const data: IdentityResponse = await request(token, context, "/api/identity/_address_");
+  if (!data.address || !data.result || !data.result.state) {
+    throw new ProviderExternalVerificationError(
+      `Error verifying Idena Status. It is likely that you do not qualify for this stamp. ${String(
+        JSON.stringify(data)
+      )}`
+    );
+  }
   const expirationDate = await requestValidationTime(token, context);
   return { address: data.address, state: data.result.state, expirationDate };
 };
@@ -127,15 +134,6 @@ export const requestIdentityAge = async (
   const data: IdentityAgeResponse = await request(token, context, "/api/identity/_address_/age");
   const expirationDate = await requestValidationTime(token, context);
   return { address: data.address, age: +data.result, expirationDate };
-};
-
-export const requestIdentityStake = async (
-  token: string,
-  context: IdenaContext
-): Promise<{ address: string; stake: number; expirationDate: string }> => {
-  const data: AddressResponse = await request(token, context, "/api/address/_address_");
-  const expirationDate = await requestValidationTime(token, context);
-  return { address: data.address, stake: +data.result.stake, expirationDate };
 };
 
 const apiClient = (): AxiosInstance => {

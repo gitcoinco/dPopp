@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 /* eslint-disable @typescript-eslint/require-await */
 
-import { ProviderContext, RequestPayload } from "@gitcoin/passport-types";
+import { RequestPayload } from "@gitcoin/passport-types";
 import { IdenaContext } from "../procedures/idenaSignIn";
-import { initCacheSession, loadCacheSession, PlatformSession } from "../../utils/platform-cache";
+import { initCacheSession, loadCacheSession } from "../../utils/platform-cache";
 import {
   IdenaStateHumanProvider,
   IdenaStateNewbieProvider,
@@ -12,17 +12,26 @@ import {
 
 // ----- Libs
 import axios from "axios";
-import { ProviderExternalVerificationError, ProviderInternalVerificationError } from "../../types";
 
 jest.mock("axios");
 
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
 const MOCK_ADDRESS = "0x5867b46bd12769e0b7522a5b64acd7c1eacb183a";
+const BAD_ADDRESS = "0x1111116bd12769e0b7522a5b64acd7c1eacb183a";
 const MOCK_SESSION_KEY = "sessionKey";
 
 const ageResponse = {
   data: { result: 7 },
+  status: 200,
+};
+
+const badIdentityResponse = {
+  data: {
+    error: {
+      message: "no data found",
+    },
+  },
   status: 200,
 };
 
@@ -67,6 +76,8 @@ beforeEach(async () => {
 
   mockedAxios.get.mockImplementation(async (url, config) => {
     switch (url) {
+      case `/api/identity/${BAD_ADDRESS}`:
+        return badIdentityResponse;
       case `/api/identity/${MOCK_ADDRESS}/age`:
         return ageResponse;
       case `/api/identity/${MOCK_ADDRESS}`:
@@ -181,5 +192,24 @@ describe("Check valid cases for state providers", function () {
       },
       expiresInSeconds: 86401,
     });
+  });
+  it("Should throw external provider error", async () => {
+    const mockSessionKey = "newSess";
+    await initCacheSession(mockSessionKey);
+    const session = await loadCacheSession<IdenaCache>(mockSessionKey);
+    await session.set("address", BAD_ADDRESS);
+    await session.set("signature", "signature");
+
+    const provider = new IdenaStateVerifiedProvider();
+    const payload = {
+      proofs: {
+        sessionKey: mockSessionKey,
+      },
+    };
+
+    await expect(provider.verify(payload as unknown as RequestPayload, {} as IdenaContext)).rejects.toThrow(
+      // eslint-disable-next-line quotes
+      'Error verifying Idena Status. It is likely that you do not qualify for this stamp. {"error":{"message":"no data found"},"address":"0x1111116bd12769e0b7522a5b64acd7c1eacb183a"}'
+    );
   });
 });
