@@ -11,9 +11,36 @@ import MinimalHeader from "./MinimalHeader";
 import { PAGE_PADDING } from "./PageWidthGrid";
 import { Disclosure } from "@headlessui/react";
 
+const { embedUrl, challengeUrl } = (() => {
+  const iamUrl = process.env.NEXT_PUBLIC_PASSPORT_IAM_URL || "";
+
+  if (iamUrl.includes("review")) {
+    return {
+      embedUrl: "https://embed.review.passport.xyz",
+      challengeUrl: "https://iam.review.passport.xyz/api/v0.0.0/challenge",
+    };
+  } else if (iamUrl.includes("staging")) {
+    return {
+      embedUrl: "https://embed.staging.passport.xyz",
+      challengeUrl: "https://iam.staging.passport.xyz/api/v0.0.0/challenge",
+    };
+  } else if (iamUrl.includes("passport.xyz")) {
+    return {
+      embedUrl: "https://embed.passport.xyz",
+      challengeUrl: "https://iam.passport.xyz/api/v0.0.0/challenge",
+    };
+  }
+  return {
+    embedUrl: "http://localhost:8004",
+    challengeUrl: "https://localhost:80/api/v0.0.0/challenge",
+  };
+})();
+
 const passportEmbedParams = {
   apiKey: process.env.NEXT_PUBLIC_EMBED_CAMPAIGN_API_KEY as string,
   scorerId: process.env.NEXT_PUBLIC_EMBED_CAMPAIGN_SCORER_ID as string,
+  overrideIamUrl: embedUrl,
+  challengeSignatureUrl: challengeUrl,
 };
 
 const Heading = ({ className, children }: { className?: string; children: React.ReactNode }) => (
