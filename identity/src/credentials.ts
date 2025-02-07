@@ -8,12 +8,6 @@ import {
   SignatureType,
 } from "@gitcoin/passport-types";
 
-// --- Base64 encoding
-import * as base64 from "@ethersproject/base64";
-
-// --- Crypto lib for hashing
-import { createHash } from "crypto";
-
 // Keeping track of the hashing mechanism (algo + content)
 export const VERSION = "v0.0.0";
 
@@ -27,6 +21,7 @@ import {
   DocumentType,
   stampCredentialDocument,
 } from "./signingDocuments.js";
+import { NullifierGenerator } from "nullifierGenerators.js";
 
 // Control expiry times of issued credentials
 export const CHALLENGE_EXPIRES_AFTER_SECONDS = 60; // 1min
@@ -38,15 +33,6 @@ const addSeconds = (date: Date, seconds: number): Date => {
   result.setSeconds(result.getSeconds() + seconds);
 
   return result;
-};
-
-// Create an ordered array of the given input (of the form [[key:string, value:string], ...])
-export const objToSortedArray = (obj: { [k: string]: string }): string[][] => {
-  const keys: string[] = Object.keys(obj).sort();
-  return keys.reduce((out: string[][], key: string) => {
-    out.push([key, obj[key]]);
-    return out;
-  }, [] as string[][]);
 };
 
 // Internal method to issue a verifiable credential
@@ -195,31 +181,36 @@ export const issueChallengeCredential = async (
 };
 
 // Return a verifiable credential with embedded hash
-export const issueHashedCredential = async (
-  DIDKit: DIDKitLib,
-  key: string,
-  address: string,
-  record: ProofRecord,
-  expiresInSeconds: number = CREDENTIAL_EXPIRES_AFTER_SECONDS,
-  signatureType?: string
-): Promise<IssuedCredential> => {
+export const issueNullifiableCredential = async ({
+  DIDKit,
+  issuerKey,
+  address,
+  record,
+  nullifierGenerators,
+  expiresInSeconds = CREDENTIAL_EXPIRES_AFTER_SECONDS,
+  signatureType,
+}: {
+  DIDKit: DIDKitLib;
+  issuerKey: string;
+  address: string;
+  record: ProofRecord;
+  nullifierGenerators: NullifierGenerator[];
+  expiresInSeconds: number;
+  signatureType?: string;
+}): Promise<IssuedCredential> => {
   // Generate a hash like SHA256(IAM_PRIVATE_KEY+PII), where PII is the (deterministic) JSON representation
   // of the PII object after transforming it to an array of the form [[key:string, value:string], ...]
   // with the elements sorted by key
-  const hash = base64.encode(
-    createHash("sha256")
-      .update(key, "utf-8")
-      .update(JSON.stringify(objToSortedArray(record)))
-      .digest()
-  );
+
+  const nullifiers = await Promise.all(nullifierGenerators.map((g) => g({ record })));
 
   let credential: VerifiableCredential;
   if (signatureType === "EIP712") {
-    const verificationMethod = await DIDKit.keyToVerificationMethod("ethr", key);
+    const verificationMethod = await DIDKit.keyToVerificationMethod("ethr", issuerKey);
     // generate a verifiableCredential
     credential = await issueEip712Credential(
       DIDKit,
-      key,
+      issuerKey,
       { expiresInSeconds },
       {
         credentialSubject: {
@@ -231,7 +222,7 @@ export const issueHashedCredential = async (
           // construct a pkh DID on mainnet (:1) for the given wallet address
           id: `did:pkh:eip155:1:${address}`,
           provider: record.type,
-          hash: `${VERSION}:${hash}`,
+          nullifiers,
         },
         // https://www.w3.org/TR/vc-status-list/#statuslist2021entry
         // Can be added to support revocation
@@ -248,7 +239,7 @@ export const issueHashedCredential = async (
     );
   } else {
     // generate a verifiableCredential
-    credential = await _issueEd25519Credential(DIDKit, key, expiresInSeconds, {
+    credential = await _issueEd25519Credential(DIDKit, issuerKey, expiresInSeconds, {
       credentialSubject: {
         "@context": [
           {
@@ -259,7 +250,7 @@ export const issueHashedCredential = async (
         // construct a pkh DID on mainnet (:1) for the given wallet address
         id: `did:pkh:eip155:1:${address}`,
         provider: record.type,
-        hash: `${VERSION}:${hash}`,
+        nullifiers,
       },
     });
   }

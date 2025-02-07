@@ -1,10 +1,7 @@
-import {
-  issueChallengeCredential,
-  issueHashedCredential,
-  verifyCredential,
-  objToSortedArray,
-} from "../src/credentials";
-import { getIssuerKey, getEip712Issuer } from "../src/issuers";
+import { issueChallengeCredential, issueNullifiableCredential, verifyCredential } from "../src/credentials";
+import { objToSortedArray } from "../src/nullifierGenerators";
+import { getIssuerKey } from "../src/issuers";
+import { HashNullifierGenerator } from "../src/nullifierGenerators";
 
 // ---- original DIDKit lib
 import * as OriginalDIDKit from "@spruceid/didkit-wasm-node";
@@ -27,6 +24,9 @@ const DIDKit: DIDKitLib = mockDIDKit as unknown as DIDKitLib;
 // this would need to be a valid key but we've mocked out didkit (and no verifications are made)
 const key = "SAMPLE_KEY";
 
+// Set up nullifier generators
+const nullifierGenerator = HashNullifierGenerator({ key: "test" });
+const nullifierGenerators = [nullifierGenerator];
 describe("issueChallengeCredential", function () {
   beforeEach(() => {
     mockDIDKit.clearDidkitMocks();
@@ -93,7 +93,7 @@ describe("issueChallengeCredential", function () {
   });
 });
 
-describe("issueHashedCredential", function () {
+describe("issueNullifiableCredential", function () {
   beforeEach(() => {
     mockDIDKit.clearDidkitMocks();
   });
@@ -113,9 +113,16 @@ describe("issueHashedCredential", function () {
           .update(JSON.stringify(objToSortedArray(record)))
           .digest()
       );
-    // details of this credential are created by issueHashedCredential - but the proof is added by DIDKit (which is mocked)
-    const { credential } = await issueHashedCredential(DIDKit, key, "0x0", record);
-    // expect to have called issueCredential
+
+    const { credential } = await issueNullifiableCredential({
+      DIDKit,
+      issuerKey: key,
+      address: "0x0",
+      record,
+      nullifierGenerators,
+      expiresInSeconds: 3600,
+    });
+
     expect(DIDKit.issueCredential).toHaveBeenCalled();
     // expect the structure/details added by issueHashedCredential to be correct
     expect(credential.credentialSubject.id).toEqual(`did:pkh:eip155:1:${record.address}`);
@@ -124,6 +131,7 @@ describe("issueHashedCredential", function () {
     expect(credential.credentialSubject.hash).toEqual(expectedHash);
     expect(typeof credential.proof).toEqual("object");
   });
+
   it("can generate an eip712 signed credential containing hash", async () => {
     const record = {
       type: "Simple",
@@ -139,9 +147,17 @@ describe("issueHashedCredential", function () {
           .update(JSON.stringify(objToSortedArray(record)))
           .digest()
       );
-    // details of this credential are created by issueHashedCredential - but the proof is added by DIDKit (which is mocked)
-    const { credential } = await issueHashedCredential(DIDKit, key, "0x0", record, 100, "EIP712");
-    // expect to have called issueCredential
+
+    const { credential } = await issueNullifiableCredential({
+      DIDKit,
+      issuerKey: key,
+      address: "0x0",
+      record,
+      nullifierGenerators,
+      expiresInSeconds: 100,
+      signatureType: "EIP712",
+    });
+
     expect(DIDKit.issueCredential).toHaveBeenCalled();
     // expect the structure/details added by issueHashedCredential to be correct
     expect(credential.credentialSubject.id).toEqual(`did:pkh:eip155:1:${record.address}`);
@@ -166,8 +182,14 @@ describe("verifyCredential", function () {
       address: "0x0",
     };
 
-    // we are creating this VC so that we know that we have a valid VC in this context to test against (never expired)
-    const { credential: credentialToVerify } = await issueHashedCredential(DIDKit, key, "0x0", record);
+    const { credential: credentialToVerify } = await issueNullifiableCredential({
+      DIDKit,
+      issuerKey: key,
+      address: "0x0",
+      record,
+      nullifierGenerators,
+      expiresInSeconds: 3600,
+    });
 
     // all verifications will pass as the DIDKit response is mocked
     expect(await verifyCredential(DIDKit, credentialToVerify)).toEqual(true);
@@ -234,15 +256,16 @@ describe("verifyCredential", function () {
       address: "0x0",
     };
 
-    // we are creating this VC so that we know that we have a valid VC in this context to test against (never expired)
-    const { credential } = await issueHashedCredential(
-      OriginalDIDKit,
-      getIssuerKey("EIP712"),
-      "0x0",
+    const { credential } = await issueNullifiableCredential({
+      DIDKit: OriginalDIDKit,
+      issuerKey: getIssuerKey("EIP712"),
+      address: "0x0",
       record,
-      1000,
-      "EIP712"
-    );
+      nullifierGenerators,
+      expiresInSeconds: 1000,
+      signatureType: "EIP712",
+    });
+
     const signedCredential = credential as VerifiableEip712Credential;
     signedCredential.proof.proofValue = "tampered";
 
@@ -250,7 +273,7 @@ describe("verifyCredential", function () {
     expect(await verifyCredential(OriginalDIDKit, credential)).toEqual(false);
   });
 
-  it("returns false when tampering with the challenge credential bein verified", async () => {
+  it("returns false when tampering with the challenge credential being verified", async () => {
     const record = {
       type: "Simple",
       version: "Test-Case-1",
