@@ -1,10 +1,24 @@
-import axios, { AxiosError } from "axios";
-import { checkCredentialBans } from "../src/bans";
-import { ErrorResponseBody } from "@gitcoin/passport-types";
-import { ApiError, UnexpectedApiError } from "../src/helpers";
+import { jest, it, describe, expect, beforeEach } from "@jest/globals";
 
-jest.mock("axios");
-const mockedAxios = axios as jest.Mocked<typeof axios>;
+jest.unstable_mockModule("axios", () => {
+  return {
+    // postFn: jest.fn(),
+    default: {
+      post: jest.fn(),
+      isAxiosError: jest.fn(),
+    },
+  };
+});
+
+const { checkCredentialBans } = await import("../src/bans.js");
+const { ApiError, UnexpectedApiError } = await import("../src/helpers.js");
+
+const {
+  default: { post, isAxiosError },
+} = await import("axios");
+
+const mockedAxiosPost = post as jest.Mock;
+const mockedIsAxiosError = isAxiosError as unknown as jest.Mock;
 
 describe("checkCredentialBans", () => {
   beforeEach(() => {
@@ -28,15 +42,15 @@ describe("checkCredentialBans", () => {
     code: 400,
   };
 
-  it("should return original response for invalid credentials", async () => {
+  it.only("should return original response for invalid credentials", async () => {
     const input = [invalidCredential];
     const result = await checkCredentialBans(input);
     expect(result).toEqual(input);
-    expect(mockedAxios.post).not.toHaveBeenCalled();
+    expect(mockedAxiosPost).not.toHaveBeenCalled();
   });
 
-  it("should check bans for valid credentials", async () => {
-    mockedAxios.post.mockResolvedValueOnce({
+  it.only("should check bans for valid credentials", async () => {
+    mockedAxiosPost.mockResolvedValueOnce({
       data: [
         {
           hash: "hash123",
@@ -48,7 +62,7 @@ describe("checkCredentialBans", () => {
     const input = [validCredential];
     const result = await checkCredentialBans(input);
 
-    expect(mockedAxios.post).toHaveBeenCalledWith(
+    expect(mockedAxiosPost).toHaveBeenCalledWith(
       expect.stringContaining("/internal/check-bans"),
       [
         {
@@ -64,8 +78,8 @@ describe("checkCredentialBans", () => {
     expect(result).toEqual(input);
   });
 
-  it("should handle banned credentials", async () => {
-    mockedAxios.post.mockResolvedValueOnce({
+  it.only("should handle banned credentials", async () => {
+    mockedAxiosPost.mockResolvedValueOnce({
       data: [
         {
           hash: "hash123",
@@ -88,8 +102,8 @@ describe("checkCredentialBans", () => {
     ]);
   });
 
-  it("should handle indefinite bans", async () => {
-    mockedAxios.post.mockResolvedValueOnce({
+  it.only("should handle indefinite bans", async () => {
+    mockedAxiosPost.mockResolvedValueOnce({
       data: [
         {
           hash: "hash123",
@@ -108,8 +122,8 @@ describe("checkCredentialBans", () => {
     });
   });
 
-  it("should process multiple credentials", async () => {
-    mockedAxios.post.mockResolvedValueOnce({
+  it.only("should process multiple credentials", async () => {
+    mockedAxiosPost.mockResolvedValueOnce({
       data: [
         { hash: "hash123", is_banned: true, ban_type: "hash" },
         { hash: "hash456", is_banned: false },
@@ -126,7 +140,7 @@ describe("checkCredentialBans", () => {
     expect((result[1] as ErrorResponseBody).code).toBe(200);
   });
 
-  it("should handle API errors gracefully", async () => {
+  it.only("should handle API errors gracefully", async () => {
     class MockAxiosError extends Error {
       response: { data: string; status: number; headers: { [key: string]: string } };
       request: string;
@@ -138,11 +152,11 @@ describe("checkCredentialBans", () => {
       isAxiosError: true;
     }
 
-    mockedAxios.post.mockImplementationOnce(() => {
+    mockedAxiosPost.mockImplementationOnce(() => {
       throw new MockAxiosError();
     });
 
-    mockedAxios.isAxiosError.mockImplementationOnce((_: any) => {
+    mockedIsAxiosError.mockImplementationOnce((_: any) => {
       return true;
     });
 
@@ -153,8 +167,8 @@ describe("checkCredentialBans", () => {
     );
   });
 
-  it("should handle missing API response data", async () => {
-    mockedAxios.post.mockResolvedValueOnce({});
+  it.only("should handle missing API response data", async () => {
+    mockedAxiosPost.mockResolvedValueOnce({});
 
     const input = [validCredential];
 

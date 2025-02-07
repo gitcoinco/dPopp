@@ -1,26 +1,37 @@
-import { verifyTypes, verifyProvidersAndIssueCredentials } from "../src/verification";
+import { jest, it, describe, expect, beforeEach } from "@jest/globals";
+import { platforms } from "@gitcoin/passport-platforms";
 
-import { issueHashedCredential } from "../src/credentials";
-import { VerifiableCredential, RequestPayload, ProviderContext, IssuedCredential } from "@gitcoin/passport-types";
-import { providers } from "@gitcoin/passport-platforms";
-import * as DIDKit from "@spruceid/didkit-wasm-node";
-import { getIssuerKey } from "../src/issuers";
-import { checkCredentialBans } from "../src/bans";
+jest.unstable_mockModule("@gitcoin/passport-platforms", () => ({
+  platforms,
+  providers: {
+    verify: jest.fn(async (type: string, payload: RequestPayload, context: ProviderContext) => {
+      return Promise.resolve({
+        valid: true,
+        record: { key: "verified-condition" },
+      });
+    }),
+  },
+}));
 
-jest.mock("../src/credentials");
-
-jest.mock("../src/verification", () => {
-  const originalModule = jest.requireActual("../src/verification");
+jest.unstable_mockModule("../src/credentials.js", async () => {
   return {
-    ...originalModule,
-    verifyProvidersAndIssueCredentials: jest.fn(originalModule.verifyProvidersAndIssueCredentials),
-    verifyTypes: jest.fn(originalModule.verifyTypes),
+    issueHashedCredential: jest.fn(),
   };
 });
 
-jest.mock("../src/bans", () => ({
+jest.unstable_mockModule("../src/bans.js", () => ({
   checkCredentialBans: jest.fn().mockImplementation((input) => Promise.resolve(input)),
 }));
+
+import { VerifiableCredential, RequestPayload, ProviderContext, IssuedCredential } from "@gitcoin/passport-types";
+import * as DIDKit from "@spruceid/didkit-wasm-node";
+const { issueHashedCredential } = await import("../src/credentials.js");
+const { verifyTypes, verifyProvidersAndIssueCredentials } = await import("../src/verification.js");
+const { getIssuerKey } = await import("../src/issuers.js");
+const { checkCredentialBans } = await import("../src/bans.js");
+const {
+  providers: { verify },
+} = await import("@gitcoin/passport-platforms");
 
 const createMockVerifiableCredential = (provider: string, address: string): VerifiableCredential => ({
   "@context": ["https://www.w3.org/2018/credentials/v1", "https://w3id.org/security/suites/eip712sig-2021/v1"],
@@ -76,28 +87,12 @@ function getMockedIssuedCredential(provider: string, address: string): IssuedCre
   return credential;
 }
 
-jest.mock("@gitcoin/passport-platforms", () => {
-  const originalModule =
-    jest.requireActual<typeof import("@gitcoin/passport-platforms")>("@gitcoin/passport-platforms");
-  return {
-    ...originalModule,
-    providers: {
-      verify: jest.fn(async (type: string, payload: RequestPayload, context: ProviderContext) => {
-        return Promise.resolve({
-          valid: true,
-          record: { key: "veirfied-condition" },
-        });
-      }),
-    },
-  };
-});
-
 describe("verifyTypes", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  it("should call providers.verify for the 'regular' providers in providersByPlatform and accumulate values in the context", async () => {
+  it.only("should call providers.verify for the 'regular' providers in providersByPlatform and accumulate values in the context", async () => {
     const mockAddress = "0x123";
     const mockScorerId = "test-scorer";
     let payload: RequestPayload = {
@@ -108,7 +103,7 @@ describe("verifyTypes", () => {
       proofs: {},
     };
 
-    const verifySpy = (providers.verify as jest.Mock).mockImplementation(
+    const verifySpy = (verify as jest.Mock).mockImplementation(
       async (provider: string, payload: RequestPayload, context: ProviderContext) => {
         // update the context
         context[`context-${provider}`] = true;
@@ -194,7 +189,7 @@ describe("verifyTypes", () => {
     ]);
   });
 
-  it("should call providers.verify with proper providers for AllowList#... and DeveloperList#... types", async () => {
+  it.only("should call providers.verify with proper providers for AllowList#... and DeveloperList#... types", async () => {
     const mockAddress = "0x123";
     let payload: RequestPayload = {
       version: "v0.0.0",
@@ -203,7 +198,7 @@ describe("verifyTypes", () => {
       challenge: "test-challenge",
     };
 
-    const verifySpy = (providers.verify as jest.Mock).mockImplementation(
+    const verifySpy = (verify as jest.Mock).mockImplementation(
       async (provider: string, payload: RequestPayload, context: ProviderContext) => {
         return Promise.resolve({
           valid: true,
@@ -304,7 +299,7 @@ describe("verifyTypes", () => {
     ]);
   });
 
-  it("should return an error if providers.verify throws", async () => {
+  it.only("should return an error if providers.verify throws", async () => {
     const mockAddress = "0x123";
     let payload: RequestPayload = {
       version: "v0.0.0",
@@ -314,7 +309,7 @@ describe("verifyTypes", () => {
       proofs: {},
     };
 
-    const verifySpy = (providers.verify as jest.Mock).mockImplementation(
+    const verifySpy = (verify as jest.Mock).mockImplementation(
       async (provider: string, payload: RequestPayload, context: ProviderContext) => {
         if (provider === "test-1") {
           throw new Error("Some Error");
@@ -359,7 +354,7 @@ describe("verifyProvidersAndIssueCredentials", () => {
     jest.clearAllMocks();
   });
 
-  it("should issue valid credentials via issueHashedCredentials", async () => {
+  it.only("should issue valid credentials via issueHashedCredentials", async () => {
     const mockAddress = "0x123";
     let payload: RequestPayload = {
       version: "v0.0.0",
@@ -372,7 +367,7 @@ describe("verifyProvidersAndIssueCredentials", () => {
 
     const currentKey = getIssuerKey("EIP712");
 
-    const verifySpy = (providers.verify as jest.Mock).mockImplementation(
+    const verifySpy = (verify as jest.Mock).mockImplementation(
       async (provider: string, payload: RequestPayload, context: ProviderContext) => {
         // update the context
         context[`context-${provider}`] = true;
@@ -434,7 +429,7 @@ describe("verifyProvidersAndIssueCredentials", () => {
     );
   });
 
-  it("should verify the issued credentials against the ban list", async () => {
+  it.only("should verify the issued credentials against the ban list", async () => {
     const mockAddress = "0x123";
     let payload: RequestPayload = {
       version: "v0.0.0",
@@ -445,7 +440,7 @@ describe("verifyProvidersAndIssueCredentials", () => {
       signatureType: "EIP712",
     };
 
-    const verifySpy = (providers.verify as jest.Mock).mockImplementation(
+    const verifySpy = (verify as jest.Mock).mockImplementation(
       async (provider: string, payload: RequestPayload, context: ProviderContext) => {
         // update the context
         context[`context-${provider}`] = true;
@@ -486,7 +481,7 @@ describe("verifyProvidersAndIssueCredentials", () => {
     );
   });
 
-  it("should override the provider if pii is provided", async () => {
+  it.only("should override the provider if pii is provided", async () => {
     const mockAddress = "0x123";
     let payload: RequestPayload = {
       version: "v0.0.0",
@@ -498,7 +493,7 @@ describe("verifyProvidersAndIssueCredentials", () => {
     };
     const currentKey = getIssuerKey("EIP712");
 
-    const verifySpy = (providers.verify as jest.Mock).mockImplementation(
+    const verifySpy = (verify as jest.Mock).mockImplementation(
       async (provider: string, payload: RequestPayload, context: ProviderContext) => {
         // update the context
         context[`context-${provider}`] = true;

@@ -1,6 +1,7 @@
+import { jest, it, describe, expect } from "@jest/globals";
 import { VerifiableEip712Credential } from "@gitcoin/passport-types";
-import { issueHashedCredential, objToSortedArray } from "../src/credentials";
-import { getIssuerKey, getEip712Issuer } from "../src/issuers";
+import { issueHashedCredential, objToSortedArray } from "../src/credentials.js";
+import { getIssuerKey, getEip712Issuer } from "../src/issuers.js";
 import * as DIDKit from "@spruceid/didkit-wasm-node";
 import * as base64 from "@ethersproject/base64";
 

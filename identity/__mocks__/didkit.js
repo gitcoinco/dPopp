@@ -1,8 +1,10 @@
-const keyToDID = jest.fn(() => Promise.resolve("did:key:PUBLIC_KEY"));
+import { jest } from "@jest/globals";
 
-const keyToVerificationMethod = jest.fn(() => Promise.resolve("did:key:PUBLIC_KEY#PUBLIC_KEY"));
+export const keyToDID = jest.fn(() => Promise.resolve("did:key:PUBLIC_KEY"));
 
-const issueCredential = jest.fn((credential) =>
+export const keyToVerificationMethod = jest.fn(() => Promise.resolve("did:key:PUBLIC_KEY#PUBLIC_KEY"));
+
+export const issueCredential = jest.fn((credential) =>
   Promise.resolve(
     JSON.stringify({
       ...JSON.parse(credential),
@@ -10,7 +12,7 @@ const issueCredential = jest.fn((credential) =>
     })
   )
 );
-const verifyCredential = jest.fn(() =>
+export const verifyCredential = jest.fn(() =>
   Promise.resolve(
     JSON.stringify({
       checks: [],
@@ -20,20 +22,9 @@ const verifyCredential = jest.fn(() =>
   )
 );
 
-const clearDidkitMocks = () => {
+export const clearDidkitMocks = () => {
   keyToDID.mockClear();
   keyToVerificationMethod.mockClear();
   issueCredential.mockClear();
   verifyCredential.mockClear();
-};
-
-// ---- Generate & Verify methods
-module.exports = {
-  keyToDID,
-  keyToVerificationMethod,
-  issueCredential,
-  verifyCredential,
-
-  /* Mock helpers */
-  clearDidkitMocks,
 };

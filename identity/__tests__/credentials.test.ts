@@ -1,3 +1,4 @@
+import { jest, it, describe, expect, beforeEach } from "@jest/globals";
 import {
   issueChallengeCredential,
   issueHashedCredential,
