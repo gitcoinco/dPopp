@@ -3,6 +3,8 @@ node_modules
 .env.*
 .nvmrc
 .yarnrc
+.yalc
+yalc.lock
 
 # Logs
 logs
