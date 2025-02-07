@@ -1,8 +1,7 @@
-import { Request } from "express";
 import { autoVerifyStamps, getEvmProvidersByPlatform } from "../src/autoVerification";
 import { PassportScore } from "../src/verification";
 
-import { issueHashedCredential } from "../src/credentials";
+import { issueNullifiableCredential } from "../src/credentials";
 import {
   PROVIDER_ID,
   VerifiableCredential,
@@ -271,8 +270,8 @@ describe("autoVerificationHandler", () => {
     );
 
     const issuedCredentials: VerifiableCredential[] = [];
-    (issueHashedCredential as jest.Mock).mockImplementation(
-      (DIDKit, currentKey, address, record: { type: string }, expiresInSeconds, signatureType) => {
+    (issueNullifiableCredential as jest.Mock).mockImplementation(
+      async ({ DIDKit, issuerKey, address, record, nullifierGenerators, expiresInSeconds, signatureType }) => {
         const credential = getMockedIssuedCredential(record.type, mockAddress);
         issuedCredentials.push(credential.credential);
         return Promise.resolve(credential);
@@ -305,8 +304,8 @@ describe("autoVerificationHandler", () => {
     );
 
     const issuedCredentials: VerifiableCredential[] = [];
-    (issueHashedCredential as jest.Mock).mockImplementation(
-      (DIDKit, currentKey, address, record: { type: string }, expiresInSeconds, signatureType) => {
+    (issueNullifiableCredential as jest.Mock).mockImplementation(
+      async ({ DIDKit, issuerKey, address, record, nullifierGenerators, expiresInSeconds, signatureType }) => {
         const credential = getMockedIssuedCredential(record.type, mockAddress);
         issuedCredentials.push(credential.credential);
         return Promise.resolve(credential);
@@ -342,8 +341,8 @@ describe("autoVerificationHandler", () => {
     );
 
     const issuedCredentials: VerifiableCredential[] = [];
-    (issueHashedCredential as jest.Mock).mockImplementation(
-      (DIDKit, currentKey, address, record: { type: string }, expiresInSeconds, signatureType) => {
+    (issueNullifiableCredential as jest.Mock).mockImplementation(
+      async ({ DIDKit, issuerKey, address, record, nullifierGenerators, expiresInSeconds, signatureType }) => {
         const credential = getMockedIssuedCredential(record.type, mockAddress);
         issuedCredentials.push(credential.credential);
         return Promise.resolve(credential);
