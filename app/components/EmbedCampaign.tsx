@@ -14,14 +14,8 @@ import { Disclosure } from "@headlessui/react";
 const passportEmbedParams = {
   apiKey: process.env.NEXT_PUBLIC_EMBED_CAMPAIGN_API_KEY as string,
   scorerId: process.env.NEXT_PUBLIC_EMBED_CAMPAIGN_SCORER_ID as string,
-  overrideIamUrl: process.env.NEXT_PUBLIC_EMBED_SERVICE_URL as string,
-  // challengeSignatureUrl: "https://iam.review.passport.xyz/api/v0.0.0/challenge",
-  challengeSignatureUrl: `${process.env.NEXT_PUBLIC_EMBED_SERVICE_URL}/embed/challenge`,
+  overrideEmbedServiceUrl: process.env.NEXT_PUBLIC_EMBED_SERVICE_URL as string,
 };
-
-console.log(" --- process.env.NEXT_PUBLIC_EMBED_CAMPAIGN_API_KEY", process.env.NEXT_PUBLIC_EMBED_CAMPAIGN_API_KEY);
-console.log(" --- process.env.NEXT_PUBLIC_EMBED_CAMPAIGN_SCORER_ID", process.env.NEXT_PUBLIC_EMBED_CAMPAIGN_SCORER_ID);
-console.log(" --- process.env.NEXT_PUBLIC_EMBED_SERVICE_URL", process.env.NEXT_PUBLIC_EMBED_SERVICE_URL);
 
 const Heading = ({ className, children }: { className?: string; children: React.ReactNode }) => (
   <div className={`font-heading text-4xl md:text-5xl text-foreground-2 ${className}`}>{children}</div>
