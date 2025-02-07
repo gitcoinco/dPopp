@@ -1,0 +1,196 @@
+name: Embed - Build and Deploy S3 - Generic
+
+on:
+  workflow_call:
+    inputs:
+      refspec:
+        description: "The commit SHA"
+        type: string
+        required: true
+      environment:
+        description: "Environment to deploy to"
+        type: string
+        required: true
+
+jobs:
+  build:
+    name: Setup & Build App 
+    runs-on: ubuntu-latest
+
+    env:
+      AWS_REGION: us-west-2
+      CORE_INFRA_PULUMI_STACK: passportxyz/core-infra/${{ inputs.environment }}
+      ONE_PASS_ENV: passport-embed-${{ inputs.environment }}-env 
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.refspec }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.9.0
+          cache: "yarn"
+
+      - name: Install 1Password CLI
+        uses: 1password/install-cli-action@v1
+      
+      - name: Configure 1Password Service Account
+        uses: 1password/load-secrets-action/configure@v1
+        with:
+          service-account-token: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+      
+      - name: Load secret
+        id: op-load-secret
+        uses: 1password/load-secrets-action@v1
+        with:
+          export-env: true
+        env:
+          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+          AWS_ACCESS_KEY_ID: op://DevOps/passport-embed-${{ inputs.environment }}-secrets/ci/AWS_ACCESS_KEY_ID
+          AWS_SECRET_ACCESS_KEY: op://DevOps/passport-embed-${{ inputs.environment }}-secrets/ci/AWS_SECRET_ACCESS_KEY
+          PULUMI_ACCESS_TOKEN: op://DevOps/passport-embed-${{ inputs.environment }}-secrets/ci/PULUMI_ACCESS_TOKEN
+
+      - name: Get envs from 1Pass
+        working-directory: embed-popup
+        run: |
+          echo "ONE_PASS_ENV=$ONE_PASS_ENV"
+          op item get "$ONE_PASS_ENV" --vault "DevOps" --format json --non-interactive | \
+          jq -r '.fields[] | select(.section.label=="App") | "\(.label)=\(.value)"' >> $GITHUB_ENV
+      
+      - name: Install Pulumi CLI
+        uses: pulumi/actions@v4
+        with:
+          pulumi-version: latest
+        
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Get Pulumi Stack Outputs From Core Infra
+        id: get_pulumi_outputs
+        run: |
+          BUCKET_NAME=$(pulumi stack output embedPopupBucketName --stack ${{ env.CORE_INFRA_PULUMI_STACK }})
+          CLOUDFRONT_ID=$(pulumi stack output embedPopupDistributionId --stack ${{ env.CORE_INFRA_PULUMI_STACK }})
+    
+          if [[ -z "$BUCKET_NAME" || -z "$CLOUDFRONT_ID" ]]; then
+            echo "Error: Failed to retrieve Pulumi stack outputs!"
+            exit 1
+          fi
+
+          echo "BUCKET_NAME=$BUCKET_NAME" >> $GITHUB_ENV
+          echo "CLOUDFRONT_ID=$CLOUDFRONT_ID" >> $GITHUB_ENV
+      
+      - name: Install Dependencies
+        working-directory: .
+        run: yarn install --frozen-lockfile
+
+      - name: Build Application
+        working-directory: .
+        run: yarn build
+
+#       - name: Upload Build Artifacts
+#         uses: actions/upload-artifact@v3
+#         with:
+#           name: embed-popup-build
+#           path: embed-popup/dist
+#         if: success() && hashFiles('embed-popup/dist/**') != ''
+
+
+#   deploy_confirm:
+#     name: Review Approval Pending
+#     needs: [build]
+#     runs-on: ubuntu-latest
+#     environment: ${{ inputs.environment }}
+#     steps:
+#       - name: Approve Release to S3
+#         run: |
+#           echo "Ref" ${{ inputs.refspec }}
+    
+#   deploy:
+#     name: Deploy App to S3
+#     runs-on: ubuntu-latest
+#     needs: [build, deploy_confirm]
+#     steps:
+
+#       - name: Checkout Repository
+#         uses: actions/checkout@v4
+#         with:
+#           ref: ${{ inputs.refspec }}
+
+#       - name: Download Build Artifacts
+#         uses: actions/download-artifact@v3
+#         with:
+#           name: embed-popup-build
+#           path: embed-popup/dist
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-2
+
+      - name: Sync Files to S3
+        working-directory: embed-popup
+        run: | 
+            if [ -d "dist" ]; then
+                aws s3 sync ./dist s3://${{ env.BUCKET_NAME }} --delete
+            else
+                echo "dist folder not found!"
+                exit 1
+            fi
+    
+      - name: Create CloudFront Invalidation
+        id: create_invalidation
+        run: |
+          INVALIDATION_ID=$(aws cloudfront create-invalidation \
+          --distribution-id ${{ env.CLOUDFRONT_ID }} \
+          --paths "/*" \
+          --query 'Invalidation.Id' \
+          --output text)
+
+          if [[ -z "$INVALIDATION_ID" ]]; then
+            echo "CloudFront invalidation failed!"
+            exit 1
+          fi
+
+          echo "INVALIDATION_ID=$INVALIDATION_ID" >> $GITHUB_ENV
+
+      - name: Wait for Invalidation Completion
+        id: check_invalidation
+        run: |
+          echo "Waiting for invalidation ID: ${{ env.INVALIDATION_ID }}"
+          for i in {1..20}; do
+              STATUS=$(aws cloudfront get-invalidation \
+              --distribution-id ${{ env.CLOUDFRONT_ID }} \
+              --id ${{ env.INVALIDATION_ID }} \
+              --query 'Invalidation.Status' \
+              --output text)
+              echo "Invalidation Status: $STATUS"
+              if [ "$STATUS" == "Completed" ]; then
+                  echo "CloudFront invalidation completed successfully."
+                  exit 0
+              fi
+              if [ "$STATUS" == "Failed" ]; then
+                  echo "CloudFront invalidation failed!"
+                  exit 1
+              fi
+              sleep 15
+          done
+          echo "CloudFront invalidation check timed out!"
+          exit 1
+
+      - name: Deployment Completed
+        run: echo "Deployment and CloudFront invalidation successful!"
+
+    
+    
+    
+    
+    

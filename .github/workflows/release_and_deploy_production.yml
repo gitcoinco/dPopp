@@ -149,6 +149,14 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           branch: staging-app
 
+  deploy-embed-s3-staging:
+    name: Build Embed Popup and Deploy to Staging S3
+    needs: ref
+    uses: ./.github/workflows/sync_to_se_generic.yml
+    with:
+      refspec: ${{ needs.ref.outputs.refspec }}
+      environment: staging
+  
   deploy-api-production:
     name: Deploy API to Production
     needs: [
@@ -193,6 +201,13 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           branch: production-app
 
+  deploy-embed-s3-production:
+    name: Build Embed Popup and Deploy to Production S3
+    needs: ref
+    uses: ./.github/workflows/sync_to_se_generic.yml
+    with:
+      refspec: ${{ needs.ref.outputs.refspec }}
+      environment: production
   release:
     name: Release
     needs: [

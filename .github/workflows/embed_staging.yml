@@ -1,0 +1,32 @@
+name: Embed Popup to Staging
+
+on: 
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      commit:
+        description: "Leave blank to use current HEAD, or provide an override commit SHA"
+        type: string
+        required: false
+
+jobs: 
+  ref:
+    name: Load Commit Ref
+    runs-on: ubuntu-latest
+    steps:
+      - id: ref
+        uses: passportxyz/gh-workflows/.github/actions/load_commit_ref@v1
+        with:
+          commit: ${{ inputs.commit }}
+    
+    outputs:
+      refspec: ${{ steps.ref.outputs.refspec }}
+
+  build-deploy:
+    name: Build App and Deploy to Staging S3
+    needs: ref
+    uses: ./.github/workflows/sync_to_se_generic.yml
+    with:
+      refspec: ${{ needs.ref.outputs.refspec }}
+      environment: staging
