@@ -1,0 +1,334 @@
+<mxfile host="app.diagrams.net" modified="2023-10-06T19:15:27.796Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36" etag="GBIjQ7DWq147Qv0_C6JO" version="22.0.3" type="github">
+  <diagram id="prtHgNgQTEPvFCAcTncT" name="Page-1">
+    <mxGraphModel dx="2983" dy="1564" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-1" value="IAM Service" style="swimlane;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="110" y="620" width="620" height="360" as="geometry" />
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-36" value="Attestation Service&lt;br&gt;(runs the VC / Stamp providers)" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;strokeColor=#232F3E;fillColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.emr_engine;" parent="uYgZu5FIEDiZeXpY4sAn-1" vertex="1">
+          <mxGeometry x="274" y="70" width="60" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-42" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="uYgZu5FIEDiZeXpY4sAn-1" source="uYgZu5FIEDiZeXpY4sAn-40" target="uYgZu5FIEDiZeXpY4sAn-36" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-40" value="API" style="sketch=0;html=1;dashed=0;whitespace=wrap;fillColor=#2875E2;strokeColor=#ffffff;points=[[0.005,0.63,0],[0.1,0.2,0],[0.9,0.2,0],[0.5,0,0],[0.995,0.63,0],[0.72,0.99,0],[0.5,1,0],[0.28,0.99,0]];verticalLabelPosition=bottom;align=center;verticalAlign=top;shape=mxgraph.kubernetes.icon;prIcon=api" parent="uYgZu5FIEDiZeXpY4sAn-1" vertex="1">
+          <mxGeometry x="60" y="55" width="100" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-45" value="- issues new attestations&lt;br&gt;- acts as a middleware for bringing stamps on-chain (validates attestations &amp;amp; prepare on-chain payload)&lt;br&gt;- converts attestations to new format" style="whiteSpace=wrap;html=1;shape=mxgraph.basic.document;align=left;" parent="uYgZu5FIEDiZeXpY4sAn-1" vertex="1">
+          <mxGeometry x="420" y="150" width="190" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.005;entryY=0.63;entryDx=0;entryDy=0;entryPerimeter=0;exitX=1;exitY=0.25;exitDx=0;exitDy=0;" parent="1" source="uYgZu5FIEDiZeXpY4sAn-2" target="uYgZu5FIEDiZeXpY4sAn-17" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="10" y="210" as="targetPoint" />
+            <mxPoint x="-210" y="700" as="sourcePoint" />
+            <Array as="points">
+              <mxPoint x="-90" y="680" />
+              <mxPoint x="-90" y="427" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="uYgZu5FIEDiZeXpY4sAn-2" target="uYgZu5FIEDiZeXpY4sAn-11" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="-10" y="770" />
+              <mxPoint x="-10" y="2110" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;dashed=1;dashPattern=12 12;" parent="1" source="uYgZu5FIEDiZeXpY4sAn-2" target="uYgZu5FIEDiZeXpY4sAn-12" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="-40" y="790" />
+              <mxPoint x="-40" y="2229" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-2" value="Passport App" style="swimlane;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="-430" y="630" width="200" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-3" value="Passport User" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" parent="1" vertex="1">
+          <mxGeometry x="-560" y="690" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-4" value="Passport Scorer" style="swimlane;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="110" y="120" width="630" height="390" as="geometry" />
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-16" value="Scorer &amp;amp; Scores" style="shape=dataStorage;whiteSpace=wrap;html=1;fixedSize=1;" parent="uYgZu5FIEDiZeXpY4sAn-4" vertex="1">
+          <mxGeometry x="330" y="50" width="260" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-18" value="Grants Data" style="shape=dataStorage;whiteSpace=wrap;html=1;fixedSize=1;" parent="uYgZu5FIEDiZeXpY4sAn-4" vertex="1">
+          <mxGeometry x="330" y="150" width="260" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-20" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.75;entryDx=0;entryDy=0;" parent="uYgZu5FIEDiZeXpY4sAn-4" source="uYgZu5FIEDiZeXpY4sAn-17" target="uYgZu5FIEDiZeXpY4sAn-16" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="260" y="180" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-32" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="uYgZu5FIEDiZeXpY4sAn-4" source="uYgZu5FIEDiZeXpY4sAn-17" target="uYgZu5FIEDiZeXpY4sAn-18" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-17" value="Passport API" style="sketch=0;html=1;dashed=0;whitespace=wrap;fillColor=#2875E2;strokeColor=#ffffff;points=[[0.005,0.63,0],[0.1,0.2,0],[0.9,0.2,0],[0.5,0,0],[0.995,0.63,0],[0.72,0.99,0],[0.5,1,0],[0.28,0.99,0]];verticalLabelPosition=bottom;align=center;verticalAlign=top;shape=mxgraph.kubernetes.icon;prIcon=api" parent="uYgZu5FIEDiZeXpY4sAn-4" vertex="1">
+          <mxGeometry x="60" y="250" width="100" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-24" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="uYgZu5FIEDiZeXpY4sAn-4" source="uYgZu5FIEDiZeXpY4sAn-21" target="uYgZu5FIEDiZeXpY4sAn-16" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="210" y="90" />
+              <mxPoint x="210" y="90" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-21" value="Public API&lt;br&gt;(for integrators)&lt;br&gt;https://api.scorer.gitcoin.co/docs" style="sketch=0;html=1;dashed=0;whitespace=wrap;fillColor=#2875E2;strokeColor=#ffffff;points=[[0.005,0.63,0],[0.1,0.2,0],[0.9,0.2,0],[0.5,0,0],[0.995,0.63,0],[0.72,0.99,0],[0.5,1,0],[0.28,0.99,0]];verticalLabelPosition=bottom;align=center;verticalAlign=top;shape=mxgraph.kubernetes.icon;prIcon=api" parent="uYgZu5FIEDiZeXpY4sAn-4" vertex="1">
+          <mxGeometry x="60" y="80" width="100" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-15" value="CeramicCache&lt;br&gt;(source of truth for stamp storage)" style="shape=dataStorage;whiteSpace=wrap;html=1;fixedSize=1;" parent="uYgZu5FIEDiZeXpY4sAn-4" vertex="1">
+          <mxGeometry x="340" y="280" width="260" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-19" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="uYgZu5FIEDiZeXpY4sAn-4" source="uYgZu5FIEDiZeXpY4sAn-17" target="uYgZu5FIEDiZeXpY4sAn-15" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-7" value="On-Chain Credentials / Attestations" style="swimlane;whiteSpace=wrap;html=1;align=left;verticalAlign=top;" parent="1" vertex="1">
+          <mxGeometry x="110" y="1020" width="1370" height="800" as="geometry" />
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-48" value="" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;dashPattern=1 2;" parent="uYgZu5FIEDiZeXpY4sAn-7" vertex="1">
+          <mxGeometry x="60" y="70" width="1270" height="310" as="geometry" />
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-49" value="Optimism" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="uYgZu5FIEDiZeXpY4sAn-7" vertex="1">
+          <mxGeometry x="70" y="70" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-54" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="uYgZu5FIEDiZeXpY4sAn-7" source="uYgZu5FIEDiZeXpY4sAn-50" target="uYgZu5FIEDiZeXpY4sAn-51" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-59" value="&amp;nbsp;Attest&amp;nbsp;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="uYgZu5FIEDiZeXpY4sAn-54" vertex="1" connectable="0">
+          <mxGeometry x="-0.0598" y="1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-50" value="Gitcoin Verifier" style="verticalLabelPosition=bottom;sketch=0;aspect=fixed;html=1;verticalAlign=top;strokeColor=none;align=center;outlineConnect=0;shape=mxgraph.citrix.document;" parent="uYgZu5FIEDiZeXpY4sAn-7" vertex="1">
+          <mxGeometry x="140" y="130" width="47" height="72" as="geometry" />
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-55" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="uYgZu5FIEDiZeXpY4sAn-7" source="uYgZu5FIEDiZeXpY4sAn-51" target="uYgZu5FIEDiZeXpY4sAn-53" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-58" value="&amp;nbsp;Store&amp;nbsp;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="uYgZu5FIEDiZeXpY4sAn-55" vertex="1" connectable="0">
+          <mxGeometry x="-0.2093" y="-2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-51" value="Gitcoin Attester" style="verticalLabelPosition=bottom;sketch=0;aspect=fixed;html=1;verticalAlign=top;strokeColor=none;align=center;outlineConnect=0;shape=mxgraph.citrix.document;" parent="uYgZu5FIEDiZeXpY4sAn-7" vertex="1">
+          <mxGeometry x="304" y="130" width="47" height="72" as="geometry" />
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-52" value="Gitcoin Resolver" style="verticalLabelPosition=bottom;sketch=0;aspect=fixed;html=1;verticalAlign=top;strokeColor=none;align=center;outlineConnect=0;shape=mxgraph.citrix.document;" parent="uYgZu5FIEDiZeXpY4sAn-7" vertex="1">
+          <mxGeometry x="660" y="130" width="47" height="72" as="geometry" />
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-56" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="uYgZu5FIEDiZeXpY4sAn-7" source="uYgZu5FIEDiZeXpY4sAn-53" target="uYgZu5FIEDiZeXpY4sAn-52" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-57" value="&amp;nbsp;Check / Index&amp;nbsp;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="uYgZu5FIEDiZeXpY4sAn-56" vertex="1" connectable="0">
+          <mxGeometry x="-0.0226" y="-2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-53" value="EAS" style="verticalLabelPosition=bottom;sketch=0;aspect=fixed;html=1;verticalAlign=top;strokeColor=none;align=center;outlineConnect=0;shape=mxgraph.citrix.document;" parent="uYgZu5FIEDiZeXpY4sAn-7" vertex="1">
+          <mxGeometry x="480" y="130" width="47" height="72" as="geometry" />
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-61" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="uYgZu5FIEDiZeXpY4sAn-7" source="uYgZu5FIEDiZeXpY4sAn-60" target="uYgZu5FIEDiZeXpY4sAn-51" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-60" value="Gitcoin EIP712 Verifier&lt;br&gt;(potentially in the future)" style="verticalLabelPosition=bottom;sketch=0;aspect=fixed;html=1;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.citrix.document;fillColor=none;strokeColor=default;dashed=1;dashPattern=12 12;" parent="uYgZu5FIEDiZeXpY4sAn-7" vertex="1">
+          <mxGeometry x="140" y="250" width="47" height="72" as="geometry" />
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-65" value="" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;dashPattern=1 2;" parent="uYgZu5FIEDiZeXpY4sAn-7" vertex="1">
+          <mxGeometry x="60" y="440" width="860" height="310" as="geometry" />
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-66" value="Linea - to be deployed soon" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="uYgZu5FIEDiZeXpY4sAn-7" vertex="1">
+          <mxGeometry x="60" y="440" width="190" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-81" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="uYgZu5FIEDiZeXpY4sAn-7" source="uYgZu5FIEDiZeXpY4sAn-69" target="uYgZu5FIEDiZeXpY4sAn-79" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="164" y="656" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-69" value="Gitcoin Verifier for Line" style="verticalLabelPosition=bottom;sketch=0;aspect=fixed;html=1;verticalAlign=top;strokeColor=none;align=center;outlineConnect=0;shape=mxgraph.citrix.document;" parent="uYgZu5FIEDiZeXpY4sAn-7" vertex="1">
+          <mxGeometry x="140" y="500" width="47" height="72" as="geometry" />
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-72" value="Gitcoin Attester" style="verticalLabelPosition=bottom;sketch=0;aspect=fixed;html=1;verticalAlign=top;strokeColor=none;align=center;outlineConnect=0;shape=mxgraph.citrix.document;" parent="uYgZu5FIEDiZeXpY4sAn-7" vertex="1">
+          <mxGeometry x="304" y="500" width="47" height="72" as="geometry" />
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-67" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="uYgZu5FIEDiZeXpY4sAn-7" source="uYgZu5FIEDiZeXpY4sAn-69" target="uYgZu5FIEDiZeXpY4sAn-72" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-68" value="&amp;nbsp;Attest&amp;nbsp;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="uYgZu5FIEDiZeXpY4sAn-67" vertex="1" connectable="0">
+          <mxGeometry x="-0.0598" y="1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-73" value="Gitcoin Resolver" style="verticalLabelPosition=bottom;sketch=0;aspect=fixed;html=1;verticalAlign=top;strokeColor=none;align=center;outlineConnect=0;shape=mxgraph.citrix.document;" parent="uYgZu5FIEDiZeXpY4sAn-7" vertex="1">
+          <mxGeometry x="660" y="500" width="47" height="72" as="geometry" />
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-74" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="uYgZu5FIEDiZeXpY4sAn-7" source="uYgZu5FIEDiZeXpY4sAn-76" target="uYgZu5FIEDiZeXpY4sAn-73" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-75" value="&amp;nbsp;Check / Index&amp;nbsp;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="uYgZu5FIEDiZeXpY4sAn-74" vertex="1" connectable="0">
+          <mxGeometry x="-0.0226" y="-2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-76" value="EAS" style="verticalLabelPosition=bottom;sketch=0;aspect=fixed;html=1;verticalAlign=top;strokeColor=none;align=center;outlineConnect=0;shape=mxgraph.citrix.document;" parent="uYgZu5FIEDiZeXpY4sAn-7" vertex="1">
+          <mxGeometry x="480" y="500" width="47" height="72" as="geometry" />
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-70" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="uYgZu5FIEDiZeXpY4sAn-7" source="uYgZu5FIEDiZeXpY4sAn-72" target="uYgZu5FIEDiZeXpY4sAn-76" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-71" value="&amp;nbsp;Store&amp;nbsp;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="uYgZu5FIEDiZeXpY4sAn-70" vertex="1" connectable="0">
+          <mxGeometry x="-0.2093" y="-2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-79" value="Verax Attestation Registry" style="verticalLabelPosition=bottom;sketch=0;aspect=fixed;html=1;verticalAlign=top;strokeColor=none;align=center;outlineConnect=0;shape=mxgraph.citrix.document;" parent="uYgZu5FIEDiZeXpY4sAn-7" vertex="1">
+          <mxGeometry x="490" y="620" width="47" height="72" as="geometry" />
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-85" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;" parent="uYgZu5FIEDiZeXpY4sAn-7" source="uYgZu5FIEDiZeXpY4sAn-84" target="uYgZu5FIEDiZeXpY4sAn-52" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-84" value="Gitcoin attestation &amp;nbsp;decoder (coming soon)" style="verticalLabelPosition=bottom;sketch=0;aspect=fixed;html=1;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.citrix.document;fillColor=none;strokeColor=default;dashed=1;dashPattern=12 12;" parent="uYgZu5FIEDiZeXpY4sAn-7" vertex="1">
+          <mxGeometry x="910" y="130" width="47" height="72" as="geometry" />
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-87" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;" parent="uYgZu5FIEDiZeXpY4sAn-7" source="uYgZu5FIEDiZeXpY4sAn-86" target="uYgZu5FIEDiZeXpY4sAn-84" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-86" value="Gitcoin Gate &amp;nbsp;(coming soon)" style="verticalLabelPosition=bottom;sketch=0;aspect=fixed;html=1;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.citrix.document;fillColor=none;strokeColor=default;dashed=1;dashPattern=12 12;" parent="uYgZu5FIEDiZeXpY4sAn-7" vertex="1">
+          <mxGeometry x="910" y="250" width="47" height="72" as="geometry" />
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-88" value="- helper contracts to allow one to check a users score &amp;amp; attestations&lt;br&gt;- &quot;Gitcoin Gate&quot; would be a base class to implement modifiers for gating contract calls" style="whiteSpace=wrap;html=1;shape=mxgraph.basic.document;align=left;" parent="uYgZu5FIEDiZeXpY4sAn-7" vertex="1">
+          <mxGeometry x="1100" y="90" width="190" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-9" value="Ceramic" style="swimlane;whiteSpace=wrap;html=1;startSize=23;" parent="1" vertex="1">
+          <mxGeometry x="110" y="2020" width="650" height="280" as="geometry" />
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-11" value="Classic&lt;br&gt;(to be dropped)" style="shape=dataStorage;whiteSpace=wrap;html=1;fixedSize=1;" parent="uYgZu5FIEDiZeXpY4sAn-9" vertex="1">
+          <mxGeometry x="80" y="50" width="160" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-12" value="Compose &lt;br&gt;(coming soon)" style="shape=dataStorage;whiteSpace=wrap;html=1;fixedSize=1;dashed=1;dashPattern=8 8;" parent="uYgZu5FIEDiZeXpY4sAn-9" vertex="1">
+          <mxGeometry x="80" y="169" width="160" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-47" value="We are in the process of migrating to compose" style="whiteSpace=wrap;html=1;shape=mxgraph.basic.document;align=left;" parent="uYgZu5FIEDiZeXpY4sAn-9" vertex="1">
+          <mxGeometry x="360" y="60" width="270" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-90" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="uYgZu5FIEDiZeXpY4sAn-9" source="uYgZu5FIEDiZeXpY4sAn-89" target="uYgZu5FIEDiZeXpY4sAn-12" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-89" value="GraphQL API" style="sketch=0;html=1;dashed=0;whitespace=wrap;fillColor=#2875E2;strokeColor=#ffffff;points=[[0.005,0.63,0],[0.1,0.2,0],[0.9,0.2,0],[0.5,0,0],[0.995,0.63,0],[0.72,0.99,0],[0.5,1,0],[0.28,0.99,0]];verticalLabelPosition=bottom;align=center;verticalAlign=top;shape=mxgraph.kubernetes.icon;prIcon=api" parent="uYgZu5FIEDiZeXpY4sAn-9" vertex="1">
+          <mxGeometry x="430" y="159" width="100" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-28" value="&lt;span style=&quot;color: rgb(0, 0, 0); font-family: Helvetica; font-size: 12px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(251, 251, 251); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; float: none; display: inline !important;&quot;&gt;&amp;nbsp;using&amp;nbsp; https://api.scorer.gitcoin.co/registry&amp;nbsp;&lt;/span&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.005;entryY=0.63;entryDx=0;entryDy=0;entryPerimeter=0;exitX=1.002;exitY=0.614;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="GmmuWClhJtt8EoiDCNr1-8" target="uYgZu5FIEDiZeXpY4sAn-21" edge="1">
+          <mxGeometry x="0.0011" relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="-468" y="262" />
+              <mxPoint x="-468" y="257" />
+            </Array>
+            <mxPoint x="-390" y="300" as="sourcePoint" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="GmmuWClhJtt8EoiDCNr1-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#fa6800;strokeColor=#C73500;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="GmmuWClhJtt8EoiDCNr1-7" target="uYgZu5FIEDiZeXpY4sAn-52">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-670" y="400" as="sourcePoint" />
+            <Array as="points">
+              <mxPoint x="-565" y="560" />
+              <mxPoint x="794" y="560" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-25" value="Integrator / Partner" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" parent="1" vertex="1">
+          <mxGeometry x="-760" y="260" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-33" value="Alchemy API (for certain providers)" style="sketch=0;html=1;dashed=0;whitespace=wrap;fillColor=#2875E2;strokeColor=#ffffff;points=[[0.005,0.63,0],[0.1,0.2,0],[0.9,0.2,0],[0.5,0,0],[0.995,0.63,0],[0.72,0.99,0],[0.5,1,0],[0.28,0.99,0]];verticalLabelPosition=bottom;align=center;verticalAlign=top;shape=mxgraph.kubernetes.icon;prIcon=api" parent="1" vertex="1">
+          <mxGeometry x="1090" y="560" width="100" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-34" value="Moralis API (for ETH &amp;nbsp;minting fee calculation)" style="sketch=0;html=1;dashed=0;whitespace=wrap;fillColor=#2875E2;strokeColor=#ffffff;points=[[0.005,0.63,0],[0.1,0.2,0],[0.9,0.2,0],[0.5,0,0],[0.995,0.63,0],[0.72,0.99,0],[0.5,1,0],[0.28,0.99,0]];verticalLabelPosition=bottom;align=center;verticalAlign=top;shape=mxgraph.kubernetes.icon;prIcon=api" parent="1" vertex="1">
+          <mxGeometry x="1090" y="680" width="100" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-35" value="... other 2rd Party APIs for stamp providers" style="sketch=0;html=1;dashed=0;whitespace=wrap;fillColor=#2875E2;strokeColor=#ffffff;points=[[0.005,0.63,0],[0.1,0.2,0],[0.9,0.2,0],[0.5,0,0],[0.995,0.63,0],[0.72,0.99,0],[0.5,1,0],[0.28,0.99,0]];verticalLabelPosition=bottom;align=center;verticalAlign=top;shape=mxgraph.kubernetes.icon;prIcon=api" parent="1" vertex="1">
+          <mxGeometry x="1090" y="810" width="100" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-37" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.005;entryY=0.63;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="uYgZu5FIEDiZeXpY4sAn-36" target="uYgZu5FIEDiZeXpY4sAn-33" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-38" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.005;entryY=0.63;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="uYgZu5FIEDiZeXpY4sAn-36" target="uYgZu5FIEDiZeXpY4sAn-34" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="uYgZu5FIEDiZeXpY4sAn-39" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.005;entryY=0.63;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="uYgZu5FIEDiZeXpY4sAn-36" target="uYgZu5FIEDiZeXpY4sAn-35" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tRTAsfZlV08TQ8dc1hLh-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#66CC00;exitX=0.75;exitY=1;exitDx=0;exitDy=0;" parent="1" source="uYgZu5FIEDiZeXpY4sAn-2" target="uYgZu5FIEDiZeXpY4sAn-50" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="-360" y="830" />
+              <mxPoint x="-360" y="1186" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tRTAsfZlV08TQ8dc1hLh-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#77bb41;" parent="1" source="uYgZu5FIEDiZeXpY4sAn-2" target="uYgZu5FIEDiZeXpY4sAn-52" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="-280" y="1130" />
+              <mxPoint x="794" y="1130" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tRTAsfZlV08TQ8dc1hLh-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.005;entryY=0.63;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="uYgZu5FIEDiZeXpY4sAn-2" target="uYgZu5FIEDiZeXpY4sAn-40" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tRTAsfZlV08TQ8dc1hLh-5" value="Public Bucket" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;strokeColor=#ffffff;fillColor=#232F3E;dashed=0;verticalLabelPosition=middle;verticalAlign=bottom;align=center;html=1;whiteSpace=wrap;fontSize=10;fontStyle=1;spacing=3;shape=mxgraph.aws4.productIcon;prIcon=mxgraph.aws4.s3;" parent="1" vertex="1">
+          <mxGeometry x="1090" y="80" width="80" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="tRTAsfZlV08TQ8dc1hLh-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="tRTAsfZlV08TQ8dc1hLh-7" target="tRTAsfZlV08TQ8dc1hLh-5" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tRTAsfZlV08TQ8dc1hLh-8" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="uYgZu5FIEDiZeXpY4sAn-16" target="tRTAsfZlV08TQ8dc1hLh-7" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="700" y="210" as="sourcePoint" />
+            <mxPoint x="1070" y="130" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tRTAsfZlV08TQ8dc1hLh-7" value="Regular sport (every 30 min) for Gitcoin Scores" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;imageAspect=0;aspect=fixed;image=https://cdn3.iconfinder.com/data/icons/UltimateGnome/128x128/status/gnome-fs-loading-icon.png" parent="1" vertex="1">
+          <mxGeometry x="880" y="80" width="128" height="128" as="geometry" />
+        </mxCell>
+        <mxCell id="tRTAsfZlV08TQ8dc1hLh-9" value="Private Bucket" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;strokeColor=#ffffff;fillColor=#232F3E;dashed=0;verticalLabelPosition=middle;verticalAlign=bottom;align=center;html=1;whiteSpace=wrap;fontSize=10;fontStyle=1;spacing=3;shape=mxgraph.aws4.productIcon;prIcon=mxgraph.aws4.s3;" parent="1" vertex="1">
+          <mxGeometry x="1090" y="280" width="80" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="tRTAsfZlV08TQ8dc1hLh-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="tRTAsfZlV08TQ8dc1hLh-10" target="tRTAsfZlV08TQ8dc1hLh-5" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tRTAsfZlV08TQ8dc1hLh-10" value="Grants Stack" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="1420" y="60" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="tRTAsfZlV08TQ8dc1hLh-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="tRTAsfZlV08TQ8dc1hLh-11" target="tRTAsfZlV08TQ8dc1hLh-5" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tRTAsfZlV08TQ8dc1hLh-11" value="Sismo" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="1420" y="148" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="tRTAsfZlV08TQ8dc1hLh-16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="tRTAsfZlV08TQ8dc1hLh-14" target="tRTAsfZlV08TQ8dc1hLh-9" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tRTAsfZlV08TQ8dc1hLh-14" value="Daily exports for analytics" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;imageAspect=0;aspect=fixed;image=https://cdn3.iconfinder.com/data/icons/UltimateGnome/128x128/status/gnome-fs-loading-icon.png" parent="1" vertex="1">
+          <mxGeometry x="890" y="260" width="128" height="128" as="geometry" />
+        </mxCell>
+        <mxCell id="tRTAsfZlV08TQ8dc1hLh-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="uYgZu5FIEDiZeXpY4sAn-16" target="tRTAsfZlV08TQ8dc1hLh-14" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="GmmuWClhJtt8EoiDCNr1-7" value="Web3 Integration&lt;br&gt;see&amp;nbsp;https://github.com/gitcoinco/eas-proxy/tree/main/docs" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-670" y="320" width="260" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="GmmuWClhJtt8EoiDCNr1-8" value="Web2 Integration&lt;br&gt;using API drom https://api.scorer.gitcoin.co/docs&amp;nbsp;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-670" y="225" width="210" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
