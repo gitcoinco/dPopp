@@ -117,7 +117,7 @@ export const requestIdentityState = async (
 ): Promise<{ address: string; state: string; expirationDate: string }> => {
   const data: IdentityResponse = await request(token, context, "/api/identity/_address_");
   const expirationDate = await requestValidationTime(token, context);
-  return { address: data.address, state: data.result.state, expirationDate };
+  return { address: data.address, state: data?.result?.state ? data.result.state : "N/A", expirationDate };
 };
 
 export const requestIdentityAge = async (
@@ -135,7 +135,7 @@ export const requestIdentityStake = async (
 ): Promise<{ address: string; stake: number; expirationDate: string }> => {
   const data: AddressResponse = await request(token, context, "/api/address/_address_");
   const expirationDate = await requestValidationTime(token, context);
-  return { address: data.address, stake: +data.result.stake, expirationDate };
+  return { address: data.address, stake: data?.result?.stake ? +data.result.stake : 0, expirationDate };
 };
 
 const apiClient = (): AxiosInstance => {
