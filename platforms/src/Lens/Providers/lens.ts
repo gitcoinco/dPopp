@@ -32,6 +32,75 @@ interface LensProfileResponse {
 
 const lensApiEndpoint = "https://api-v2.lens.dev/";
 
+// Alchemy Api key
+export const apiKey = process.env.ALCHEMY_API_KEY;
+
+type GetNftsForOwnerResponse = {
+  ownedNfts: [
+    {
+      raw: {
+        metadata: {
+          attributes: {
+            display_type: string;
+            trait_type?: string;
+            value: string;
+          }[];
+        };
+      };
+      name: string;
+    },
+  ];
+  totalCount: number;
+  validAt: any;
+  pageKey: any;
+};
+
+export function getNFTEndpoint(): string {
+  return `https://polygon-mainnet.g.alchemy.com/nft/v3/${apiKey}/getNFTsForOwner`;
+}
+
+async function getLensProfileFromAlchemy(userAddress: string): Promise<LensProfileResponse> {
+  try {
+    const providerUrl = getNFTEndpoint();
+
+    const lensProtocolHandlesContract = "0xe7E7EaD361f3AaCD73A61A9bD6C10cA17F38E945";
+    const response = (
+      await axios.get(providerUrl, {
+        params: {
+          contractAddresses: [lensProtocolHandlesContract],
+          owner: userAddress,
+          withMetadata: "true",
+          pageSize: 10,
+        },
+      })
+    ).data as GetNftsForOwnerResponse;
+
+    let fullHandle = "";
+    if (response.ownedNfts.length > 0) {
+      const handleNft = response.ownedNfts[0];
+      const name = handleNft.name;
+
+      const namespace = handleNft.raw.metadata.attributes.find((a) => a.trait_type === "NAMESPACE");
+
+      if (namespace) {
+        fullHandle = `${namespace.value}/${name.substring(1)}`;
+        return {
+          valid: true,
+          handle: fullHandle,
+          errors: [],
+        };
+      }
+    }
+
+    return {
+      valid: false,
+      errors: ["We were unable to retrieve a Lens handle for your address."],
+    };
+  } catch (error) {
+    handleProviderAxiosError(error, "getContractsForOwner", [apiKey]);
+  }
+}
+
 async function getLensProfile(userAddress: string): Promise<LensProfileResponse> {
   try {
     const query = `
@@ -94,7 +163,7 @@ export class LensProfileProvider implements Provider {
       const address = payload.address.toString().toLowerCase();
       let record = undefined;
       let errors: string[] = [];
-      const { valid, handle, errors: lensErrors } = await getLensProfile(address);
+      const { valid, handle, errors: lensErrors } = await getLensProfileFromAlchemy(address);
 
       if (valid === true) {
         record = { handle };
